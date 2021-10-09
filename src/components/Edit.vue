@@ -16,7 +16,7 @@ export default {
       this.toggleEditing();
     },
     handleEdit: function() {
-      this.editUser(this.data);
+      this.editUser({ id: this.data.id, name: this.name, email: this.email });
     },
   },
 };

@@ -14,6 +14,7 @@ export default {
       isEditing: false,
       isAdding: false,
       data: null,
+      search: "",
     };
   },
   mounted() {
@@ -60,7 +61,7 @@ export default {
         .patch(`https://jsonplaceholder.typicode.com/users/${user.id}`, user)
         .then((res) => {
           this.users = [
-            ...this.users.filter((user) => user.id !== user.id),
+            ...this.users.filter((el) => el.id !== user.id),
             res.data,
           ];
           this.isEditing = false;
@@ -78,6 +79,12 @@ export default {
         <i class="fa-solid fa-plus me-2"></i>Add user
       </button>
     </div>
+    <input
+      type="text"
+      class="form-control my-5"
+      placeholder="Search . . ."
+      @change="(e) => (this.search = e.target.value.trim().toLocaleLowerCase())"
+    />
     <div v-if="isDeleting">
       <Delete :toggleDeleting="toggleDeleting" :deleteUser="deleteUser" />
     </div>
@@ -98,7 +105,23 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user of users" :key="user.id">
+        <tr
+          v-for="user of users
+            .filter(
+              (user) =>
+                user.name
+                  .trim()
+                  .toLocaleLowerCase()
+                  .includes(search) ||
+                user.email
+                  .trim()
+                  .toLocaleLowerCase()
+                  .includes(search) ||
+                user.id === Number(search)
+            )
+            .sort((a, b) => a.id - b.id)"
+          :key="user.id"
+        >
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
