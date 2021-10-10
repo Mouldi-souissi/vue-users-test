@@ -19,7 +19,9 @@ export default {
   },
   mounted() {
     axios
-      .get("https://jsonplaceholder.typicode.com/users")
+      .get(
+        "https://server-express-oz1ow6qnv-mouldi-souissi.vercel.app/api/users"
+      )
       .then((res) => (this.users = res.data))
       .catch((err) => console.log(err));
   },
@@ -40,16 +42,21 @@ export default {
     },
     deleteUser: function() {
       axios
-        .delete(`https://jsonplaceholder.typicode.com/users/${this.data.id}`)
+        .delete(
+          `https://server-express-oz1ow6qnv-mouldi-souissi.vercel.app/api/users/${this.data._id}`
+        )
         .then(() => {
-          this.users = this.users.filter((user) => user.id !== this.data.id);
+          this.users = this.users.filter((user) => user._id !== this.data._id);
           this.isDeleting = false;
         })
         .catch((err) => console.log(err));
     },
     addUser: function(user) {
       axios
-        .post(`https://jsonplaceholder.typicode.com/users`, user)
+        .post(
+          `https://server-express-oz1ow6qnv-mouldi-souissi.vercel.app/api/users`,
+          user
+        )
         .then((res) => {
           this.users = [...this.users, res.data];
           this.isAdding = false;
@@ -58,10 +65,13 @@ export default {
     },
     editUser: function(user) {
       axios
-        .patch(`https://jsonplaceholder.typicode.com/users/${user.id}`, user)
+        .patch(
+          `https://server-express-oz1ow6qnv-mouldi-souissi.vercel.app/api/users/${user._id}`,
+          user
+        )
         .then((res) => {
           this.users = [
-            ...this.users.filter((el) => el.id !== user.id),
+            ...this.users.filter((el) => el._id !== user._id),
             res.data,
           ];
           this.isEditing = false;
@@ -117,12 +127,12 @@ export default {
                   .trim()
                   .toLocaleLowerCase()
                   .includes(search) ||
-                user.id === Number(search)
+                user._id === Number(search)
             )
-            .sort((a, b) => a.id - b.id)"
-          :key="user.id"
+            .sort((a, b) => a._id - b._id)"
+          :key="user._id"
         >
-          <td>{{ user.id }}</td>
+          <td>{{ user._id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>
